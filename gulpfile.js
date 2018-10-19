@@ -20,6 +20,11 @@ const cleanCSS = require('gulp-clean-css');
 const babel = require("gulp-babel");
 const uglify = require('gulp-uglify'); //JS圧縮
 
+
+//ブラウザシンクindex
+const index_path = 'top_pc.html';
+
+
 //ソースディレクトリ
 const srcs = {
 	'scss':'./src/scss',
@@ -64,7 +69,7 @@ gulp.task('browser-sync', function() {
 		server: {
 			browser: 'Chrome',
 			baseDir: './dest',
-			index  : 'index.html'
+			index  : index_path
 		}
 	});
 });
@@ -82,7 +87,9 @@ gulp.task('slim', () => {
 		.pipe(plumber())
 		//slimをhtmlに
 		.pipe(slim({
-			pretty: true
+			pretty: true,
+			require: 'slim/include',
+			options: 'include_dirs=["' + srcs.slim + '/inc"]'
 		}))
 		//htmlを整形
 		.pipe(prettify({
