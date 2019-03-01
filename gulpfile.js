@@ -83,8 +83,16 @@ gulp.task('reload', function(){
 
 //SLIM
 gulp.task('slim', () => {
-	return gulp.src([srcs.slim + '/**/*.slim'])
-		.pipe(plumber())
+	return gulp.src([
+			srcs.slim + '/**/*.slim',
+			'!' + srcs.slim + '/inc/**/*.slim'
+		])
+		.pipe(plumber({
+			errorHandler: function(err) {
+				console.log(err);
+				this.emit('end');
+			}
+		}))
 		//slimをhtmlに
 		.pipe(slim({
 			pretty: true,
@@ -131,7 +139,7 @@ gulp.task("babel", function () {
 	return gulp.src(srcs.babel + '/**/*.js')
 		.pipe(plumber())
 		.pipe(babel({
-			presets: ['@babel/env']
+			presets: ['es2015','stage-0', 'react'],
 		}))
 		.pipe(gulp.dest(dests.js))
 		.pipe(uglify({
